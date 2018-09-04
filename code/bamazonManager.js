@@ -18,12 +18,14 @@ connection.connect(function (err) {
     managerView()
 });
 
+
+//Manager View Function
 function managerView() {
     inquirer
         .prompt([{
             type: "input",
             name: "managerUser",
-            message: "Enter manager user id (can be anything)"
+            message: "Enter manager username:"
         }]).then(answers => {
             managerUser = answers.managerUser;
             if (managerUser === managerUser) {

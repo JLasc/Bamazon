@@ -11,11 +11,13 @@ var connection = mysql.createConnection({
     database: "bamazon"
 });
 
+//Connect to DB and run initalizer
 connection.connect(function (err) {
     if (err) throw err;
     productInit();
 });
 
+//Initialize product menu
 function productInit() {
     //Displays all products
     connection.query("SELECT * FROM bamazon.products;", function (err, res) {

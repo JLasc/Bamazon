@@ -12,18 +12,20 @@ var connection = mysql.createConnection({
     database: "bamazon"
 });
 
+//Misc Variables
 var headline = "#".repeat(10)
 var banner = "#".repeat(35)
 
-var newArray = [];
-
+//Keep record of how many items in DB
+var itemCount = [];
 connection.query("SELECT * FROM bamazon.products", function (err, res) {
     if (err) throw err
     for (i = 0; i < res.length; i++) {
-        newArray.push(res[i].item_id)
+        itemCount.push(res[i].item_id)
     }
 })
 
+//Main Menu Inquirer function
 function mainMenu() {
     inquirer
         .prompt([{
@@ -86,7 +88,7 @@ module.exports = {
 
                 connection.query(`SELECT * FROM bamazon.products WHERE item_id=${productId}`, function (err, res) {
                     if (err) throw err
-                    var idChecker = newArray.indexOf(productId)
+                    var idChecker = itemCount.indexOf(productId)
 
                     if (idChecker < 0) {
                         console.log("There is no item with this ID")

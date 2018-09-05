@@ -12,9 +12,6 @@ var connection = mysql.createConnection({
     database: "bamazon"
 });
 
-//Misc Variables
-var headline = "#".repeat(10)
-var banner = "#".repeat(35)
 
 //Keep record of how many items in DB
 var itemCount = [];
@@ -132,42 +129,60 @@ module.exports = {
             })
     },
     addProd: function () {
-        inquirer
-            .prompt([{
-                type: "input",
-                name: "product_name",
-                message: "Enter name of product:"
-            }, {
-                type: "input",
-                name: "product_dept",
-                message: "Enter department of product:"
-            }, {
-                type: "input",
-                name: "price",
-                message: "Enter the price:"
-            }, {
-                type: "quantity",
-                name: "quantity",
-                message: "Enter quantity:"
-            }]).then(answers => {
-                var name = answers.product_name;
-                var dept = answers.product_dept;
-                var price = parseFloat(answers.price);
-                var quantity = parseInt(answers.quantity);
 
-                connection.query(
-                    "INSERT INTO products SET ?", {
-                        product_name: name,
-                        product_department: dept,
-                        price: price,
-                        quantity: quantity
-                    },
-                    function (err, res) {
-                        if (err) throw err
-                        console.log(colors.red("New product has been added!"))
-                        mainMenu()
-                    })
-            })
+
     }
-
 }
+
+
+inquirer
+    .prompt([{
+        type: "list",
+        name: "Options",
+        choices: ["Add Product", "Return to Menu"]
+    }]).then(answers => {
+        var userChoice = answers.Options
+        switch (userChoice) {
+            case "Add Product":
+                inquirer
+                    .prompt([{
+                        type: "input",
+                        name: "product_name",
+                        message: "Enter name of product:"
+                    }, {
+                        type: "input",
+                        name: "product_dept",
+                        message: "Enter department of product:"
+                    }, {
+                        type: "input",
+                        name: "price",
+                        message: "Enter the price:"
+                    }, {
+                        type: "quantity",
+                        name: "quantity",
+                        message: "Enter quantity:"
+                    }]).then(answers => {
+                        var name = answers.product_name;
+                        var dept = answers.product_dept;
+                        var price = parseFloat(answers.price);
+                        var quantity = parseInt(answers.quantity);
+
+                        connection.query(
+                            "INSERT INTO products SET ?", {
+                                product_name: name,
+                                product_department: dept,
+                                price: price,
+                                quantity: quantity
+                            },
+                            function (err, res) {
+                                if (err) throw err
+                                console.log(colors.red("New product has been added!"))
+                                mainMenu()
+                            })
+                    })
+                break;
+            case "Return to Menu":
+                mainMenu()
+                break;
+        }
+    })

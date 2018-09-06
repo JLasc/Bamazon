@@ -2,6 +2,19 @@
 var mysql = require("mysql");
 var inquirer = require("inquirer");
 var colors = require("colors");
+var Table = require("cli-table");
+
+//Template for table
+var tableTemp = {
+    head: ["ID", "Name", "Dept", "Price", "Quantity"],
+    colWidths: [6, 13, 13, 13, 13]
+};
+
+var addItemTable = {
+    head: ["ID", "Name", "Quantity"],
+    colWidths: [6, 13, 6]
+};
+
 
 //Sql Server connection
 var connection = mysql.createConnection({
@@ -15,12 +28,162 @@ var connection = mysql.createConnection({
 
 //Keep record of how many items in DB
 var itemCount = [];
+
 connection.query("SELECT * FROM bamazon.products", function (err, res) {
     if (err) throw err
     for (i = 0; i < res.length; i++) {
         itemCount.push(res[i].item_id)
     }
 })
+
+//Creates the table of product items
+function productTable(query) {
+    connection.query(`${query}`, function (err, res) {
+        if (err) throw err;
+        var table = new Table(tableTemp);
+        for (i = 0; i < res.length; i++) {
+            tableArr = [
+                res[i].item_id,
+                res[i].product_name,
+                res[i].product_department,
+                res[i].price,
+                res[i].quantity
+            ];
+            table.push(tableArr);
+        }
+        console.log(table.toString());
+    });
+}
+
+
+function addTable(query) {
+    connection.query(`${query}`, function (err, res) {
+        if (err) throw err;
+        var table = new Table(addItemTable);
+        for (i = 0; i < res.length; i++) {
+            tableArr = [
+                res[i].item_id,
+                res[i].product_name,
+                res[i].quantity
+            ];
+            table.push(tableArr);
+        }
+        console.log(table.toString());
+    });
+}
+
+
+//Add Quantity to Item
+function addQuantity() {
+    inquirer
+        .prompt([{
+            type: "input",
+            name: "item_id",
+            message: "Enter the ID of the product: "
+        }]).then(answers => {
+
+            productId = parseInt(answers.item_id);
+
+
+            connection.query(`SELECT * FROM bamazon.products WHERE item_id=${productId}`, function (err, res) {
+                if (err) throw err
+                var idChecker = itemCount.indexOf(productId)
+
+                if (idChecker < 0) {
+                    console.log("There is no item with this ID")
+                    addQuantity()
+                    return
+                } else {
+                    var itemQuan = parseInt(res[0].quantity);
+                    inquirer
+                        .prompt([{
+                            type: "list",
+                            name: "Options",
+                            choices: ["Add to product stock", "Return to menu"]
+                        }]).then(answers => {
+                            var choice = answers.Options
+                            switch (choice) {
+                                case "Add to product stock":
+                                    inquirer
+                                        .prompt([{
+                                            type: "input",
+                                            name: "quan_add",
+                                            message: "How much would you like to add?"
+                                        }]).then(answers => {
+                                            var qAdd = parseInt(answers.quan_add);
+                                            var newQuan = itemQuan + qAdd
+                                            connection.query(`UPDATE bamazon.products SET quantity=${newQuan} WHERE item_id=${productId}`, function (err, res) {
+                                                if (err) throw err
+                                                console.log(colors.red("\nProduct quantity has been updated!\n"))
+                                                mainMenu()
+                                            })
+                                        })
+                                    break;
+                                case "Return to menu":
+                                    mainMenu()
+                                    break;
+                            }
+                        })
+                }
+
+            })
+        })
+}
+
+function createNewItem() {
+    inquirer
+        .prompt([{
+            type: "list",
+            name: "Options",
+            choices: ["Add Product", "Return to Menu"]
+        }]).then(answers => {
+            var userChoice = answers.Options
+            switch (userChoice) {
+                case "Add Product":
+                    inquirer
+                        .prompt([{
+                            type: "input",
+                            name: "product_name",
+                            message: "Enter name of product:"
+                        }, {
+                            type: "input",
+                            name: "product_dept",
+                            message: "Enter department of product:"
+                        }, {
+                            type: "input",
+                            name: "price",
+                            message: "Enter the price:"
+                        }, {
+                            type: "quantity",
+                            name: "quantity",
+                            message: "Enter quantity:"
+                        }]).then(answers => {
+                            var name = answers.product_name;
+                            var dept = answers.product_dept;
+                            var price = parseFloat(answers.price);
+                            var quantity = parseInt(answers.quantity);
+
+                            connection.query(
+                                "INSERT INTO products SET ?", {
+                                    product_name: name,
+                                    product_department: dept,
+                                    price: price,
+                                    quantity: quantity
+                                },
+                                function (err, res) {
+                                    if (err) throw err
+                                    console.log(colors.red("New product has been added!"))
+                                    mainMenu()
+                                })
+                        })
+                    break;
+                case "Return to Menu":
+                    mainMenu()
+                    break;
+            }
+        })
+}
+
 
 //Main Menu Inquirer function
 function mainMenu() {
@@ -33,156 +196,43 @@ function mainMenu() {
             userChoice = answers.Options
             switch (userChoice) {
                 case "View Products For Sale":
-                    module.exports.products()
+                    productTable("SELECT * FROM products")
+                    setTimeout(mainMenu, 1000)
                     break;
                 case "View Low Inventory":
-                    module.exports.lowInv()
+                    productTable("SELECT * FROM products WHERE quantity < 5")
+                    setTimeout(mainMenu, 1000)
                     break;
                 case "Add to Inventory":
-                    module.exports.addInv()
+                    addTable("SELECT item_id, product_name, quantity FROM products WHERE quantity < 5")
+                    setTimeout(addQuantity, 1000)
                     break;
                 case "Add New Product":
-                    module.exports.newProd()
+                    createNewItem()
                     break;
             }
         })
 }
+
+
 
 module.exports = {
     products: function () {
-        connection.query("SELECT * FROM bamazon.products", function (err, res) {
-            if (err) throw err
-            console.log(`${"#".repeat(14)} ${colors.yellow("INVENTORY")} ${"#".repeat(14)}\n${"#".repeat(39)}`)
-            for (i = 0; i < res.length; i++) {
-                console.log(`\nID: ${res[i].item_id}\nName:${res[i].product_name}\nDepartment: ${res[i].product_department}\nPrice: ${res[i].price}\nQuantity: ${res[i].quantity}\n`)
-            }
-            console.log("#".repeat(31) + "\n")
-            mainMenu()
-        })
+        productTable("SELECT * FROM products")
+        setTimeout(mainMenu, 1000)
     },
     lowInv: function () {
-        connection.query("SELECT item_id, product_name, product_department, quantity FROM bamazon.products WHERE quantity<5", function (err, res) {
-            if (err) throw err;
-
-            console.log(`${headline} ${colors.yellow("LOW INVENTORY")} ${headline}\n${banner}`)
-            for (j = 0; j < res.length; j++) {
-                console.log(`\nID: ${res[j].item_id}\nName:${res[j].product_name}\nDepartment: ${res[j].product_department}\nQuantity: ${res[j].quantity}\n`)
-            }
-            console.log(banner + "\n")
-            mainMenu()
-        })
+        productTable("SELECT * FROM products WHERE quantity < 5")
+        setTimeout(mainMenu, 1000)
     },
+
     addInv: function () {
-        inquirer
-            .prompt([{
-                type: "input",
-                name: "item_id",
-                message: "Enter the ID of the product: "
-            }]).then(answers => {
+        addTable("SELECT item_id, product_name, quantity FROM products WHERE quantity < 5")
+        setTimeout(addQuantity, 1000)
 
-                productId = parseInt(answers.item_id);
-
-
-                connection.query(`SELECT * FROM bamazon.products WHERE item_id=${productId}`, function (err, res) {
-                    if (err) throw err
-                    var idChecker = itemCount.indexOf(productId)
-
-                    if (idChecker < 0) {
-                        console.log("There is no item with this ID")
-                        module.exports.addInv()
-                        return
-                    } else {
-                        var itemQuan = parseInt(res[0].quantity);
-                        console.log(`\nID: ${res[0].item_id}\nName: ${res[0].product_name}\nDepartment: ${res[0].product_department}\nPrice: ${res[0].price}\nQuantity: ${res[0].quantity}\n`)
-                        inquirer
-                            .prompt([{
-                                type: "list",
-                                name: "Options",
-                                choices: ["Add to product stock", "Return to menu"]
-                            }]).then(answers => {
-                                var choice = answers.Options
-                                switch (choice) {
-                                    case "Add to product stock":
-                                        inquirer
-                                            .prompt([{
-                                                type: "input",
-                                                name: "quan_add",
-                                                message: "How much would you like to add?"
-                                            }]).then(answers => {
-                                                var qAdd = parseInt(answers.quan_add);
-                                                var newQuan = itemQuan + qAdd
-                                                connection.query(`UPDATE bamazon.products SET quantity=${newQuan} WHERE item_id=${productId}`, function (err, res) {
-                                                    if (err) throw err
-                                                    console.log(colors.red("\nProduct quantity has been updated!\n"))
-                                                    mainMenu()
-                                                })
-                                            })
-                                        break;
-                                    case "Return to menu":
-                                        mainMenu()
-                                        break;
-                                }
-                            })
-                    }
-
-                })
-            })
     },
     addProd: function () {
-
-
+        createNewItem()
     }
+
 }
-
-
-inquirer
-    .prompt([{
-        type: "list",
-        name: "Options",
-        choices: ["Add Product", "Return to Menu"]
-    }]).then(answers => {
-        var userChoice = answers.Options
-        switch (userChoice) {
-            case "Add Product":
-                inquirer
-                    .prompt([{
-                        type: "input",
-                        name: "product_name",
-                        message: "Enter name of product:"
-                    }, {
-                        type: "input",
-                        name: "product_dept",
-                        message: "Enter department of product:"
-                    }, {
-                        type: "input",
-                        name: "price",
-                        message: "Enter the price:"
-                    }, {
-                        type: "quantity",
-                        name: "quantity",
-                        message: "Enter quantity:"
-                    }]).then(answers => {
-                        var name = answers.product_name;
-                        var dept = answers.product_dept;
-                        var price = parseFloat(answers.price);
-                        var quantity = parseInt(answers.quantity);
-
-                        connection.query(
-                            "INSERT INTO products SET ?", {
-                                product_name: name,
-                                product_department: dept,
-                                price: price,
-                                quantity: quantity
-                            },
-                            function (err, res) {
-                                if (err) throw err
-                                console.log(colors.red("New product has been added!"))
-                                mainMenu()
-                            })
-                    })
-                break;
-            case "Return to Menu":
-                mainMenu()
-                break;
-        }
-    })

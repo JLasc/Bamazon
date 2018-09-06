@@ -49,6 +49,50 @@ function prodSales() {
         }
         console.log(table.toString());
     })
+    superView()
+}
+
+function createDept() {
+    inquirer  
+        .prompt([
+            {
+                type:"list",
+                name:"Options",
+                choices:["Add new department to view", "Return to menu"]
+            }
+        ]).then(answers => {
+            
+            var userChoice = answers.choices;
+
+            switch (userChoice) {
+                case "Add new department to view":
+                    inquirer
+                        .prompt([
+                            {
+                                type:"input",
+                                name: "dept_name",
+                                message: "What is the department name?"
+                            },
+                            {
+                                type:"input",
+                                name:"dept_overhead",
+                                message:"What is this departments overhead?"
+                            }
+                        ]).then(answers => {
+                            var deptName = answers.dept_name;
+                            var deptOverhead = answers.dept_overhead;
+
+                            connection.query(`INSERT INTO departments VALUES (${deptName}, ${deptOverhead }, 0, 0)`, function(err){
+                                if (err) throw err
+                                console.log("Department added successfully!")
+                            })
+                        })
+                break;
+                case "Return to menu":
+                break;
+            }
+                       
+        })
 }
 
 

@@ -72,6 +72,8 @@ function purchaseQ() {
                     productQuan = res[0].quantity;
                     var quan = parseInt(answer.quantity);
                     var updQuan = productQuan - quan;
+                    var price = res[0].price; 
+                    var dept = res[0].product_department
 
                     if (productQuan <= 0) {
                         console.log("Insufficient Quantity!");
@@ -90,14 +92,37 @@ function purchaseQ() {
                                 }
                             });
                     } else if (productQuan > 0) {
-                        //Update server quantity
+                        //Update product sell count by quan purchased  
+                        connection.query(`UPDATE products SET item_count_sold= item_count_sold + ${quan} WHERE item_id=${productId}`, function(err){
+                            if (err) throw err
+                            console.log("Item count updated")
+                        })
+
+                        connection.query(`UPDATE departments SET product_sales=${price*quan} WHERE department_name="${dept}"`, function(err, res){
+                            if (err) throw err
+                            console.log("Product Sales have been updated")
+                        })
+
+                        //Update total profit on Department
+                        connection.query(`UPDATE departments SET total_profit=product_sales - over_head_costsWHERE department_name="${dept}"`, function(err){
+                            if (err) throw err
+                            console.log("Total Profit has been updated")
+                        })
+                        
+                        //Update total profit on Products
+                        connection.query(`UPDATE products SET product_sales=${price*quan}WHERE item_id="${productId}"`, function(err){
+                            if (err) throw err
+                            console.log("Total Profit has been updated")
+                        })
+                        //Update server quantity to subtract amount purchased
                         connection.query(
-                            `UPDATE products SET quantity=${updQuan} WHERE item_id="${productId}"`,
+                            `UPDATE products SET quantity=${updQuan} WHERE item_id=${productId}`,
                             function (err, res) {
                                 if (err) throw err;
                                 console.log("Purchase Complete!");
-                                setTimeout(productInit, 1);
+                                setTimeout(productInit, 2000);
                             }
+                          
                         );
                     }
                 }

@@ -168,7 +168,9 @@ function createNewItem() {
                                     product_name: name,
                                     product_department: dept,
                                     price: price,
-                                    quantity: quantity
+                                    quantity: quantity,
+                                    product_sales: 0,
+                                    item_count_sold: 0
                                 },
                                 function (err, res) {
                                     if (err) throw err

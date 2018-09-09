@@ -1,4 +1,4 @@
-#Bamazon Node Database
+## Bamazon Node Database
 
 This node application utilizes MySQL and Inquire to allow a user to purchase items as a customer. As a manager see see all products for sale, view low inventoryu, add inventory, and add new products to the database. As a supervisor, it will allow you to see the the total sales of each department, and how much actual profit each department has made against the operating costs.
 

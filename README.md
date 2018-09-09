@@ -19,14 +19,15 @@ In order to run this application locally you will need the latest versions of `n
 
 ### Functionality
 
-\*Bamazon Customer (bamazonCustomer.js)
-Buy Product:
-(https://s15.postimg.cc/4bxbscgaz/cutsomer_buy.jpg)
+Bamazon Customer (bamazonCustomer.js)
+
+    Buy Product:
+    (https://s15.postimg.cc/4bxbscgaz/cutsomer_buy.jpg)
 
     **Unable to purchase zero quantity items**
     (https://s15.postimg.cc/eyr4xr90r/customer_insf_buy.jpg)
 
-\*Bamazon Manager (bamazonManager.js)
+Bamazon Manager (bamazonManager.js)
 
     Manager Menu:
     1. (https://s15.postimg.cc/msrqikod7/manager_menu.jpg)
@@ -47,7 +48,7 @@ Buy Product:
     2. (https://s15.postimg.cc/7irvbydln/manager_addprod2.jpg)
     3. (https://s15.postimg.cc/eaiae8pkb/manager_addprod3.jpg)\
 
-\*Bamazon Supervisor (bamazonSupervisor.js)
+Bamazon Supervisor (bamazonSupervisor.js)
 
     Add new department
     (https://s15.postimg.cc/ojarklo23/supervisor_add_dept.jpg)

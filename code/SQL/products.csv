@@ -1,10 +1,10 @@
-1,Sandals,Apparel,39.99,7
-2,Sofa,Home,299.99,2
-3,Utensils,Home/Kitchen,19.99,10
-4,Socks,Apparel,9.99,8
-5,Headphones,Electronics,59.99,3
-6,Hair Brush,Cosmetic,7.99,5
-7,Stereo,Electronics,99.99,1
-8,Twister,Kids/Games,19.99,13
-9,Paint brush,Home Improvement,32.99,2
-10,Watch,Apparel,199.99,1
+1,Sandals,Apparel,39.99,7,0,0
+2,Sofa,Home,299.99,2,0,0
+3,Utensils,Kitchen,19.99,10,0,0
+4,Socks,Apparel,9.99,8,0,0
+5,Headphones,Electronics,59.99,3,0,0
+6,Hair Brush,Cosmetic,7.99,5,0,0
+7,Stereo,Electronics,99.99,1,0,0
+8,Twister,Games,19.99,13,0,0
+9,Paint brush,Home,32.99,2,0,0
+10,Watch,Apparel,199.99,1,0,0

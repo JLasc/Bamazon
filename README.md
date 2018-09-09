@@ -13,47 +13,47 @@ This node application utilizes MySQL and Inquire to allow a user to purchase ite
 - Once installed, type `vagrant ssh` to get into your VM, then navigate by typing `cd /var/code` to access the JS files.
 - Simply run `node bamazonCustomer.js` or one of the other js files
 
-### Prerequisites
+## Prerequisites
 
 In order to run this application locally you will need the latest versions of `node.js`, `MySQL workbench`, `vagrant`, and `virtual box` and a VM on your choice. This was created using an ubuntu vm.
 
-### Functionality
+## Functionality
 
-Bamazon Customer (bamazonCustomer.js)
+###Bamazon Customer (bamazonCustomer.js)
 
-Buy Product:  
+####Buy Product:  
 ![Customer Buy Image](https://s15.postimg.cc/4bxbscgaz/cutsomer_buy.jpg)
 
-Unable to purchase zero quantity items:  
+####Unable to purchase zero quantity items:  
 ![Zero quantity](https://s15.postimg.cc/eyr4xr90r/customer_insf_buy.jpg)
 
-Bamazon Manager (bamazonManager.js)
+###Bamazon Manager (bamazonManager.js)
 
-Manager Menu:  
+####Manager Menu:  
 ![manager menu](https://s15.postimg.cc/msrqikod7/manager_menu.jpg)
 
-View Products for Sale:  
+####View Products for Sale:  
 ![view products for sale](https://s15.postimg.cc/brwle36kb/manager_products.jpg)
 
-Check low inventory:  
+####Check low inventory:  
 ![check low inventory](https://s15.postimg.cc/vb16mxabf/manager_lowinv.jpg)
 
-Add inventory to a product:  
+####Add inventory to a product:  
 ![Add inventory 1](https://s15.postimg.cc/rq5b48vnf/manager_addinv.jpg)
 ![Add inventory 2](https://s15.postimg.cc/5e7iav497/manager_addinv2.jpg)
 ![Add inventory 3](https://s15.postimg.cc/djpk91fnf/manager_addinv3.jpg)
 
-Add new product:  
+####Add new product:  
 ![Add new product 1](https://s15.postimg.cc/ka61ig08b/manager_addprod.jpg)
 ![Add new product 2](https://s15.postimg.cc/7irvbydln/manager_addprod2.jpg)
 ![Add new product 3](https://s15.postimg.cc/eaiae8pkb/manager_addprod3.jpg)\
 
-Bamazon Supervisor (bamazonSupervisor.js)
+###Bamazon Supervisor (bamazonSupervisor.js)
 
-Add new department  
+####Add new department  
 ![Add new department](https://s15.postimg.cc/ojarklo23/supervisor_add_dept.jpg)
 
-View departments  
+####View departments  
 ![view department](https://s15.postimg.cc/s2wpaeyhn/supervisor_view_Products.jpg)
 
 ## Built With

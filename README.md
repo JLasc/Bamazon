@@ -15,7 +15,7 @@ This node application utilizes MySQL and Inquire to allow a user to purchase ite
 
 ## Prerequisites
 
-In order to run this application locally you will need the latest versions of `node.js`, `MySQL workbench`, `vagrant`, and `virtual box` and a VM on your choice. This was created using an ubuntu vm.
+In order to run this application locally you will need the latest versions of `node.js`, `MySQL workbench`, `vagrant`, and `virtual box` and a VM on your choice. This was created using an ubuntu vm. View the last section to find links to the respective technologies.
 
 ## Functionality
 

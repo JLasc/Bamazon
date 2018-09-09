@@ -22,7 +22,6 @@ In order to run this application locally you will need the latest versions of `n
 Bamazon Customer (bamazonCustomer.js)
 
     Buy Product:
-    [alt text](https://s15.postimg.cc/4bxbscgaz/cutsomer_buy.jpg "Customer Buy")
 
     **Unable to purchase zero quantity items**
     (https://s15.postimg.cc/eyr4xr90r/customer_insf_buy.jpg)
@@ -63,3 +62,5 @@ Bamazon Supervisor (bamazonSupervisor.js)
 - [Virtual Box](https://www.virtualbox.org/)
 - [NPM Inquirer](https://www.npmjs.com/package/inquirer)
 - [NPM CLI-Table](https://www.npmjs.com/package/cli-table)
+
+  (https://s15.postimg.cc/4bxbscgaz/cutsomer_buy.jpg)
